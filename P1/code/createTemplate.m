@@ -19,7 +19,7 @@ function [ pattern ] = createTemplate( data , namePattern )
             pattern.std = squeeze(std(data));
             
         case 'raw'
-            pattern.data = data;
+            pattern.raw = data;
         
                 
     end

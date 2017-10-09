@@ -35,12 +35,12 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     z = ( currentSample(:) - currentTemplate.mean(:) ) ./ currentTemplate.std(:);
                     z2 = z.^2;      %More importance to higher errors
                     templateScore(e) = sum(z2);   % <-- We want to minimize this value
-                case 'kNearestForEachClass' %NO kNearest, es diferente
-                    K = 3;
-                    dist = zeros(size(currentTemplate.data(1)));
+                case 'kNearestForEachClass' %NO K-nearest, es diferente
+                    K = 10;
+                    dist = zeros(size(currentTemplate.raw(1)));
                     
-                    for j = 1:size(currentTemplate.data,1)
-                        temp = squeeze(currentTemplate.data(j,:,:));
+                    for j = 1:size(currentTemplate.raw,1)
+                        temp = squeeze(currentTemplate.raw(j,:,:));
                         dist(j) = pdist2(currentSample(:)', temp(:)', 'euclidean');
                     end
                     
