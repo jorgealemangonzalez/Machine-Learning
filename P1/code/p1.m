@@ -26,17 +26,18 @@ emotionsUsed = [0 1 3 4 5 6 7];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %K = 3;
 %indexesCrossVal = crossvalind('Kfold',size(imagesData,1),K);
-%load indexesCrossVal.mat
-load indexesCrossVal10.mat
-indexesCrossVal = indexesCrossVal10;
+load indexesCrossVal.mat
+%load indexesCrossVal10.mat
+%indexesCrossVal = indexesCrossVal10;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% TEST DIFFERENT TEMPLATES METHODS %%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'grayscaleMean', 'euclidean', indexesCrossVal)
+%[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'grayscaleMean', 'euclidean', indexesCrossVal)
 %[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'chamferMean', 'euclidean', indexesCrossVal)
-[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'grayscaleMeanDeviation', 'zVal', indexesCrossVal)
+%[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'grayscaleMeanDeviation', 'zVal', indexesCrossVal)
+[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'raw', 'kNearestForEachClass', indexesCrossVal)
 
 
 
