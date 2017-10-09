@@ -33,8 +33,10 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     templateScore(e) = pdist2(currentSample(:)', currentTemplate(:)','euclidean');
                 case 'zVal'
                     z = ( currentSample(:) - currentTemplate.mean(:) ) ./ currentTemplate.std(:);
-                    z2 = z.^2;      %More importance to higher errors
+                    z2 = z.^4;      %More importance to higher errors
                     templateScore(e) = sum(z2);   % <-- We want to minimize this value
+                    %Z values might be worst than euclidean distance to
+                    %mean because the distribution is not GAUSIAN
             end
         end        
         %get the label with the minimum similarity score and assign it to
