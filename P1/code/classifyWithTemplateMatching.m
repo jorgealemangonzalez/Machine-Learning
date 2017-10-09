@@ -31,6 +31,10 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
             switch errorMeasure
                 case 'euclidean'
                     templateScore(e) = pdist2(currentSample(:)', currentTemplate(:)','euclidean');
+                case 'zVal'
+                    z = ( currentSample(:) - currentTemplate.mean(:) ) ./ currentTemplate.std(:);
+                    z2 = z.^2;      %More importance to higher errors
+                    templateScore(e) = sum(z2);   % <-- We want to minimize this value
             end
         end        
         %get the label with the minimum similarity score and assign it to
