@@ -17,6 +17,9 @@ function [ pattern ] = createTemplate( data , namePattern )
         case 'grayscaleMeanDeviation'
             pattern.mean = squeeze(mean(data));
             pattern.std = squeeze(std(data));
+            
+        case 'raw'
+            pattern.raw = data;
         
                 
     end

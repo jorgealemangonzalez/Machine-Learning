@@ -37,6 +37,17 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     templateScore(e) = sum(z2);   % <-- We want to minimize this value
                     %Z values might be worst than euclidean distance to
                     %mean because the distribution is not GAUSIAN
+                case 'kNearestForEachClass' %NO K-nearest, es diferente
+                    K = 10;
+                    dist = zeros(size(currentTemplate.raw(1)));
+                    
+                    for j = 1:size(currentTemplate.raw,1)
+                        temp = squeeze(currentTemplate.raw(j,:,:));
+                        dist(j) = pdist2(currentSample(:)', temp(:)', 'euclidean');
+                    end
+                    
+                    dist2 = sort(dist);
+                    templateScore(e) = sum(dist2(1:K)); %Suma de las K dist?ncias m?s cercanas
             end
         end        
         %get the label with the minimum similarity score and assign it to
