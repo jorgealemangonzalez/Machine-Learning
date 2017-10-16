@@ -65,7 +65,9 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
         end        
         
         if strcmp(errorMeasure, 'K-NN')
-            sort(distances);    %TODO SORT OLNY MATCHING ONE COLUMN
+            [D I] = sort(distances(:,:,1));    
+            distances(:,:,1) = D;
+            distances(:,:,2) = distances(I,:,2);
             results = distances(1:10,1,2);   % recover classes
             selectedClass = mode(results);
             templateScore = zeros(numTemplates);
