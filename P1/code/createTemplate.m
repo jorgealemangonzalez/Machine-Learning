@@ -20,8 +20,10 @@ function [ pattern ] = createTemplate( data , namePattern )
             
         case 'raw'
             pattern.raw = data;
-        
-                
+            
+        case 'hist'
+            pattern.samples = size(data,1);
+            pattern.hist = hist(data(:,:),256) / pattern.samples;
     end
 end
 

@@ -8,13 +8,20 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
         for i = 1:size(testData,1)
             image = squeeze(testData(i,:,:));
             testData(i,:,:) = bwdist(edge(image,'canny',0.4));
-        end 
+        end
     end
 
     %init the variable where the estimated labels will be stored
     estimatedLabels = zeros(1,size(testData,1));
     %get the number of templates we are going to evaluate
     numTemplates = size(templates,1);
+    
+    if(strcmp(method,'hist')==1)
+        totalSamples = 0;
+        for i = 1:numTemplates
+            totalSamples = totalSamples + templates(i).samples;
+        end
+    end
     
     %Iterate over all the test data
     for i = 1:size(testData,1)
@@ -61,6 +68,14 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     
                     dist2 = sort(dist);
                     templateScore(e) = sum(dist2(1:K)); %Suma de las K dist?ncias m?s cercanas
+                    
+                case 'bayesian'
+                    cs = currentSample(:);
+                    prior = currentTemplate.samples / totalSamples;
+                    
+                    for csi = 1:size(cs)
+                        templateScore(e) = templateScore(e) + (currentTemplate.hist(cs(csi)+1, csi) * prior);
+                    end
             end
         end        
         
