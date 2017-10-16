@@ -23,19 +23,18 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
         %init the similarity score for each template with the current
         %sample
         templateScore = zeros(1,numTemplates);
-        if strcmp(errorMeasure, 'K-NN')
-            dx = 1;% Distance  K-NN
-            K = 10;
+        if strcmp(errorMesure, 'K-NN')
+           distances =  zeros(numTemplates, 
         end
         for e = 1:numTemplates
             %get the current template
             currentTemplate = squeeze(templates(e,:,:));
-            if strcmp(errorMeasure, 'K-NN')
-               for r = 1:size(currentTemplate.raw,1)
-                   temp = squeeze(currentTemplate.raw(r,:,:));
-                   distances(dx,:,:) = [pdist2(currentSample(:)', temp(:)', 'euclidean') e]; % #samples x 1 x 2  -> 1x2 = [distance class]
-                   dx = dx +1;
+            if strcmp(errorMesure, 'K-NN')
+               sr = size(currentTemplate.raw,1);
+               for r = 1:sr
+                   
                end
+               
             end
                
             %get the similarity score of the pattern with the given sample
@@ -63,15 +62,6 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     templateScore(e) = sum(dist2(1:K)); %Suma de las K dist?ncias m?s cercanas
             end
         end        
-        
-        if strcmp(errorMeasure, 'K-NN')
-            sort(distances);    %TODO SORT OLNY MATCHING ONE COLUMN
-            results = distances(1:10,1,2);   % recover classes
-            selectedClass = mode(results);
-            templateScore = zeros(numTemplates);
-            templateScore(selectedClass) = -1; % Min score to selected class
-        end
-        
         %get the label with the minimum similarity score and assign it to
         %the current sample
         estimatedLabels(i) = emotions(find(templateScore==min(templateScore),1));

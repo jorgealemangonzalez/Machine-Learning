@@ -41,4 +41,5 @@ indexesCrossVal = crossvalind('Kfold',size(imagesData,1),K);
 
 %[accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'grayscaleMean', 'euclidean', indexesCrossVal)
 %[accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'grayscaleMeanDeviation', 'zVal', indexesCrossVal)
-[accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'raw', 'kNearestForEachClass', indexesCrossVal)
+%[accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'raw', 'kNearestForEachClass', indexesCrossVal)
+[accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'raw', 'K-NN', indexesCrossVal)
