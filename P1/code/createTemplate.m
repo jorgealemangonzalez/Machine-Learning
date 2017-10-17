@@ -23,7 +23,7 @@ function [ pattern ] = createTemplate( data , namePattern )
             
         case 'hist'
             pattern.samples = size(data,1);
-            pattern.hist = hist(data(:,:),256) / pattern.samples;
+            pattern.hist = hist(data(:,:),15) / pattern.samples;
     end
 end
 

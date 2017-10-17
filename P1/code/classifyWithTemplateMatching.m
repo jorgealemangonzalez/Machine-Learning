@@ -31,7 +31,7 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
         %sample
         templateScore = zeros(1,numTemplates);
         if strcmp(errorMeasure, 'K-NN')
-            dx = 1;% Distance  K-NN
+            dx = 1;% Distance index K-NN
             K = 10;
         end
         for e = 1:numTemplates
@@ -74,7 +74,7 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     prior = currentTemplate.samples / totalSamples;
                     
                     for csi = 1:size(cs)
-                        templateScore(e) = templateScore(e) + (currentTemplate.hist(cs(csi)+1, csi) * prior);
+                        templateScore(e) = templateScore(e) + (currentTemplate.hist( ceil(( (cs(csi)+1)/256)*15) , csi) * prior);
                     end
             end
         end        
