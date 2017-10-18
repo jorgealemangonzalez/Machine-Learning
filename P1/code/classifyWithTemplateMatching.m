@@ -50,24 +50,14 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
             switch errorMeasure
                 case 'euclidean'
                     templateScore(e) = pdist2(currentSample(:)', currentTemplate(:)','euclidean');
+                case 'cityblock'
+                    templateScore(e) = pdist2(currentSample(:)', currentTemplate(:)','cityblock');
                 case 'zVal'
                     z = ( currentSample(:) - currentTemplate.mean(:) ) ./ currentTemplate.std(:);
                     z2 = z.^4;      %More importance to higher errors
                     templateScore(e) = sum(z2);   % <-- We want to minimize this value
                     %Z values might be worst than euclidean distance to
                     %mean because the distribution is not GAUSIAN
-                    
-                case 'kNearestForEachClass' %NO K-nearest, it is different
-                    K = 10;
-                    dist = zeros(size(currentTemplate.raw(1)));
-                    
-                    for j = 1:size(currentTemplate.raw,1)
-                        temp = squeeze(currentTemplate.raw(j,:,:));
-                        dist(j) = pdist2(currentSample(:)', temp(:)', 'euclidean');
-                    end
-                    
-                    dist2 = sort(dist);
-                    templateScore(e) = sum(dist2(1:K)); %Suma de las K dist?ncias m?s cercanas
                     
                 case 'bayesian'
                     cs = currentSample(:);
@@ -85,7 +75,7 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
             distances(:,:,2) = distances(I,:,2);
             results = distances(1:10,1,2);   % recover classes
             selectedClass = mode(results);
-            templateScore = zeros(numTemplates);
+            templateScore = zeros(1,numTemplates);
             templateScore(selectedClass) = -1; % Min score to selected class
         end
         
