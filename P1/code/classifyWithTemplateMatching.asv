@@ -63,14 +63,11 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     cs = currentSample(:);
                     prior = currentTemplate.samples / totalSamples;
                     cs = cs + currentTemplate.minValue; % Rescale to avoid negative values
-                    cs(cs<currentTemplate.minValue) = currentTemplate.minValue;
+                    cs(cs<1) = 1;
                     cs(cs>currentTemplate.maxValue) = currentTemplate.maxValue;
                     for csi = 1:size(cs)
-                        histIndex = floor(((cs(csi)-currentTemplate.minValue)/currentTemplate.difValues)*currentTemplate.histSize);
-                        if histIndex == 0
-                            histIndex = 1;
-                        end
-                        templateScore(e) = templateScore(e) - (currentTemplate.hist( histIndex , csi) * prior);
+                        histIndex = ((cs(csi)-currentTemplate.minValue)/currentTemplate.difValues)*currentTemplate.;
+                        templateScore(e) = templateScore(e) - (currentTemplate.hist( ceil(histIndex) , csi) * prior);
                     end
             end
         end        

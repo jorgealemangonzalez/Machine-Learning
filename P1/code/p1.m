@@ -19,7 +19,7 @@ emotionsUsed = [0 1 3 4 5 6 7];
 %%%%%%%%%%%%%%%% EXTRACT DATA %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[imagesData shapeData labels] = extractData('../CKDBVeryHard', emotionsUsed);
+[imagesData shapeData labels] = extractData('../CKDB', emotionsUsed);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%% DIVIDE DATA (TRAIN/TEST) WITH CROSS VALIDATION  %%%%%%%%%
@@ -34,7 +34,7 @@ lastIndexes = indexesCrossVal;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% TEST DIFFERENT TEMPLATES METHODS %%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-tiempo_inicio = cputime;
+% tiempo_inicio = cputime;
 % [accuracy confMatrix]=testMethod(imagesData , labels, emotionsUsed ,  'grayscaleMean', 'euclidean', indexesCrossVal)
 % ALLRESULTS('CKDBVeryHard_imagesData_grayscaleMean_euclidean') = {accuracy,confMatrix,cputime - tiempo_inicio};
 % tiempo_inicio = cputime;
@@ -46,13 +46,13 @@ tiempo_inicio = cputime;
 % tiempo_inicio = cputime;
 % [accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'grayscaleMeanDeviation', 'zVal', indexesCrossVal)
 % ALLRESULTS('CKDBVeryHard_imagesData_grayscaleMeanDeviation_zVal') = {accuracy,confMatrix,cputime - tiempo_inicio};
-% tiempo_inicio = cputime;
-% [accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'hist', 'bayesian', indexesCrossVal)
-% ALLRESULTS('CKDBVeryHard_imagesData_hist_bayesian') = {accuracy,confMatrix,cputime - tiempo_inicio};
-% tiempo_inicio = cputime;
-[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'raw', 'K-NN', indexesCrossVal)
-ALLRESULTS('CKDBVeryHard_imagesData_raw_K-NN') = {accuracy,confMatrix,cputime - tiempo_inicio};
 tiempo_inicio = cputime;
+[accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'hist', 'bayesian', indexesCrossVal)
+ALLRESULTS('CKDB_imagesData_hist_bayesian') = {accuracy,confMatrix,cputime - tiempo_inicio};
+% tiempo_inicio = cputime;
+% [accuracy confMatrix] = testMethod(imagesData , labels, emotionsUsed ,  'raw', 'K-NN', indexesCrossVal)
+% ALLRESULTS('CKDBVeryHard_imagesData_raw_K-NN') = {accuracy,confMatrix,cputime - tiempo_inicio};
+% tiempo_inicio = cputime;
 % [accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'grayscaleMean', 'euclidean', indexesCrossVal)
 % ALLRESULTS('CKDBVeryHard_shapeData_grayscaleMean_euclidean') = {accuracy,confMatrix,cputime - tiempo_inicio};
 % tiempo_inicio = cputime;
@@ -61,9 +61,9 @@ tiempo_inicio = cputime;
 % tiempo_inicio = cputime;
 % [accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'grayscaleMeanDeviation', 'zVal', indexesCrossVal)
 % ALLRESULTS('CKDBVeryHard_shapeData_grayscaleMeanDeviation_zVal') = {accuracy,confMatrix,cputime - tiempo_inicio};
+tiempo_inicio = cputime;
+[accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'hist', 'bayesian', indexesCrossVal)
+ALLRESULTS('CKDB_shapeData_hist_bayesian') = {accuracy,confMatrix,cputime - tiempo_inicio};
 % tiempo_inicio = cputime;
-% [accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'hist', 'bayesian', indexesCrossVal)
-% ALLRESULTS('CKDBVeryHard_shapeData_hist_bayesian') = {accuracy,confMatrix,cputime - tiempo_inicio};
-% tiempo_inicio = cputime;
-[accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'raw', 'K-NN', indexesCrossVal)
-   ALLRESULTS('CKDBVeryHard_shapeData_raw_K-NN') = {accuracy,confMatrix,cputime - tiempo_inicio};
+% [accuracy confMatrix] = testMethod(shapeData , labels, emotionsUsed ,  'raw', 'K-NN', indexesCrossVal)
+%    ALLRESULTS('CKDBVeryHard_shapeData_raw_K-NN') = {accuracy,confMatrix,cputime - tiempo_inicio};

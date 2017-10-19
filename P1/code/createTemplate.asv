@@ -23,12 +23,10 @@ function [ pattern ] = createTemplate( data , namePattern )
             
         case 'hist'
             pattern.samples = size(data,1);
-            pattern.minValue = min(data(:))+1;
-            data = data + pattern.minValue; % Rescale to avoid negative values
+            pattern.rescaleFactor = min(data(:));
+            data = data + pattern.rescaleFactor; % Rescale to avoid negative values
             pattern.maxValue = max(data(:));
-            pattern.difValues = pattern.maxValue - pattern.minValue;
-            pattern.histSize = 50;
-            pattern.hist = hist(data(:,:),pattern.histSize) / pattern.samples;
+            pattern.hist = hist(data(:,:),pattern.maxValue) / pattern.samples;
     end
 end
 
