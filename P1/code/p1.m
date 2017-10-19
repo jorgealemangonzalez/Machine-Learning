@@ -32,6 +32,16 @@ indexesCrossVal = crossvalind('Kfold',size(imagesData,1),K);
 lastIndexes = indexesCrossVal;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% IMAGE PREPROCESSING %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Normalize values of all images in imageData
+for i = 1:size(imagesData,1)
+    image = squeeze(imagesData(i,:,:));
+    imagesData(i,:,:) = 255.*(image - min(min(image)))./(max(max(image)) - min(min(image)));
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% TEST DIFFERENT TEMPLATES METHODS %%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % tiempo_inicio = cputime;
