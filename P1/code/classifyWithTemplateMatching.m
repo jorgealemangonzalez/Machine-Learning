@@ -64,7 +64,7 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
                     prior = currentTemplate.samples / totalSamples;
                     
                     for csi = 1:size(cs)
-                        templateScore(e) = templateScore(e) + (currentTemplate.hist( ceil(( (cs(csi)+1)/256)*15) , csi) * prior);
+                        templateScore(e) = templateScore(e) - (currentTemplate.hist( ceil(( (cs(csi)+1)/256)*68) , csi) * prior);
                     end
             end
         end        
