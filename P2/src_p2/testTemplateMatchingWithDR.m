@@ -17,9 +17,9 @@ for k = 1:K
     display(['Testing data subset: ' num2str(k) '/' num2str(K)]);
     %get train and test dataset with the indexes obtained with the KFold
     %cross validation
-    train = data(indexes~=k,:,:);
+    train = data(indexes~=k,:);
     labelsTrain = labels(indexes~=k);
-    test = data(indexes==k,:,:);
+    test = data(indexes==k,:);
     labelsTest = labels(indexes==k);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,16 +28,28 @@ for k = 1:K
     % AND THEN PROJECT THE TESTING DATA USING THEM            %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % TODO
-    
+    %TODO , LAS LABELS QUE SE LE PASAN A LDA TIENE QUE SER PARA CADA ROW
+    %DEL TRAIN
+    % si solo hacemos lda da out of memory
+    [dataProjected, meanProjection1, vectorsProjection1] = reduceDimensionality( train, 'PCA',200, labelsTrain);
+    [dataProjected, meanProjection2, vectorsProjection2] = reduceDimensionality( dataProjected, 'LDA', 75, labelsTrain);
+
+    train = dataProjected;
+    test = projectData(  projectData(test, meanProjection1, vectorsProjection1)...
+        , meanProjection2, vectorsProjection2);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     
     %reserve memory to store the template for each emotion
     c= 1;
     for e = labelsUsed
-        trainEmotion = train(labelsTrain==e,:,:);
-        templates(c,:) = mean(trainEmotion); 
+        trainEmotion = train(labelsTrain==e,:);
+        if strcmp(errorMeasure,'euclidean')
+            templates{c} = mean(trainEmotion);
+        end
+        if strcmp(errorMeasure,'K-NN')
+            templates{c} = trainEmotion;
+        end
         c = c+1;
     end
     
