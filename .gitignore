@@ -1,3 +1,8 @@
-P1/CKDB/*
-DB/*
 *.m~
+*.png
+
+/CKDB/*
+*/CKDB/*
+
+/DB/*
+*/DB/*

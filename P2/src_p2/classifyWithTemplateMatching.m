@@ -40,6 +40,15 @@ function [ estimatedLabels ] = classifyWithTemplateMatching( templates , testDat
             switch errorMeasure
                 case 'euclidean'
                     templateScore(e) = pdist2(currentSample(:)', currentTemplate(:)','euclidean');
+                case 'cityblock'
+                    templateScore(e) = pdist2(currentSample(:)', currentTemplate(:)','cityblock');
+                case 'zVal'
+                    z = ( currentSample(:) - currentTemplate.mean(:) ) ./ currentTemplate.std(:);
+                    z2 = z.^4;      %More importance to higher errors
+                    templateScore(e) = sum(z2);   % <-- We want to minimize this value
+                    %Z values might be worst than euclidean distance to
+                    %mean because the distribution is not GAUSIAN
+
             end
         end      
         if strcmp(errorMeasure, 'K-NN')

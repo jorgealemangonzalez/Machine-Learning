@@ -44,12 +44,7 @@ for k = 1:K
     c= 1;
     for e = labelsUsed
         trainEmotion = train(labelsTrain==e,:);
-        if strcmp(errorMeasure,'euclidean')
-            templates{c} = mean(trainEmotion);
-        end
-        if strcmp(errorMeasure,'K-NN')
-            templates{c} = trainEmotion;
-        end
+        templates{c} = createTemplate(trainEmotion, errorMeasure);
         c = c+1;
     end
     
