@@ -30,4 +30,7 @@ indexesCrossVal = crossvalind('Kfold',size(imagesData,1),K);
 
 
 %%%%%%%  EXAMPLE OF CLASSIFYING THE EXPRESSION USING TEMPLATE  MATCHING %%%%
-[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'example','none')
+%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'example','none')
+%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','none')
+%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','PCA')
+[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','LDA')

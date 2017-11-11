@@ -30,12 +30,11 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
 
         switch dimensionalityReductionMethod
             case 'PCA'
-                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'PCA', 530, labelsTrain);
-                testSamples = testSamples * vectorsProjection;
+                %CODE HERE
+                
             case 'LDA'
-                [dataProjected, meanProjection, vectorsProjectionPCA] = reduceDimensionality( trainSamples, 'PCA', 520, labelsTrain);
-                [trainSamples, meanProjection, vectorsProjectionLDA] = reduceDimensionality( dataProjected, 'LDA', 6, labelsTrain);
-                testSamples = testSamples * vectorsProjectionPCA * vectorsProjectionLDA;
+                %CODE HERE
+
             case 'kernelPCA'    
                 %CODE HERE
 		%Check de compute_mapping function.
@@ -61,20 +60,9 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
                 %Buld as many models as classes 1vsAll
                 for k=1:nClasses
                     cls = labelsUsed(k);
-                    newLabelsTrain =(labelsTrain == cls);
-                    SVMStructs(k) = svmtrain(trainSamples, newLabelsTrain);
+                    
                 end
-                
-                %classify test cases
-                for j=1:size(testSamples,1)
-                    for k=1:nClasses
-                        if(svmclassify(SVMStructs(k),testSamples(j,:))) 
-                            break;
-                        end
-                    end
-                    estimatedLabels(j) = labelsUsed(k);
-                end
-                
+
                 
             case 'Mahalanobis'
 
