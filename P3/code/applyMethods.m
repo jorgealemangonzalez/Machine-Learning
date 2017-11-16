@@ -65,7 +65,6 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
                
             case 'Mahalanobis'
                 estimatedLabels = classify(testSamples, trainSamples, labelsTrain, 'mahalanobis');
-                
             case 'SVM'
                 % TODO:
                 % Train and classify with an implementation of SVM
@@ -78,6 +77,52 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
                     cls = labelsUsed(k);
                     newLabelsTrain =(labelsTrain == cls);
                     SVMStructs(k) = svmtrain(trainSamples, newLabelsTrain);
+                end
+                
+                %classify test cases
+                for j=1:size(testSamples,1)
+                    for k=1:nClasses
+                        if(svmclassify(SVMStructs(k),testSamples(j,:))) 
+                            break;
+                        end
+                    end
+                    estimatedLabels(j) = labelsUsed(k);
+                end
+            case 'SVMgaussian'
+                % TODO:
+                % Train and classify with an implementation of SVM
+                % HINT: check Matlab's svmtrain / svmclassify
+                % REMEMBER: basic SVM is intended for binary classification. It MUST be extended to a 
+                %  multiclass level, look for a strategy (data partition, iterative one-against-all, etc)
+                nClasses = length(labelsUsed);
+                %Buld as many models as classes 1vsAll
+                for k=1:nClasses
+                    cls = labelsUsed(k);
+                    newLabelsTrain =(labelsTrain == cls);
+                    SVMStructs(k) = svmtrain(trainSamples, newLabelsTrain, 'kernel_function', 'rbf');
+                end
+                
+                %classify test cases
+                for j=1:size(testSamples,1)
+                    for k=1:nClasses
+                        if(svmclassify(SVMStructs(k),testSamples(j,:))) 
+                            break;
+                        end
+                    end
+                    estimatedLabels(j) = labelsUsed(k);
+                end    
+            case 'SVMpolynomialKernel'
+                % TODO:
+                % Train and classify with an implementation of SVM
+                % HINT: check Matlab's svmtrain / svmclassify
+                % REMEMBER: basic SVM is intended for binary classification. It MUST be extended to a 
+                %  multiclass level, look for a strategy (data partition, iterative one-against-all, etc)
+                nClasses = length(labelsUsed);
+                %Buld as many models as classes 1vsAll
+                for k=1:nClasses
+                    cls = labelsUsed(k);
+                    newLabelsTrain =(labelsTrain == cls);
+                    SVMStructs(k) = svmtrain(trainSamples, newLabelsTrain, 'kernel_function', 'polynomial');
                 end
                 
                 %classify test cases
