@@ -51,13 +51,11 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
                 [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'kernelPCAgaussian', 530, labelsTrain);
                 testSamples = testSamples * vectorsProjection;
             case 'kernelPCApolynomial'
-                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'kernelPCApolynomial', 530, labelsTrain);
+                [trainSamples, ~, vectorsProjection] = reduceDimensionality( trainSamples, 'kernelPCApolynomial', 530, labelsTrain);
                 testSamples = testSamples * vectorsProjection;
 		%Check de compute_mapping function.
 
         end
-
-
 
         switch classificationMethod
             case 'example'

@@ -3,7 +3,7 @@ function [ dataProjected, meanProjection, vectorsProjection ] = reduceDimensiona
 %the matrix data using PCA or LDA.
     switch drMethod
         case 'PCA'
-            [dataProjected mappingPCA]= compute_mapping(data,'PCA', dimensions);
+            [dataProjected, mappingPCA]= compute_mapping(data,'PCA', dimensions);
             meanProjection = mappingPCA.mean;
             vectorsProjection = mappingPCA.M;
         case 'LDA'
@@ -11,19 +11,17 @@ function [ dataProjected, meanProjection, vectorsProjection ] = reduceDimensiona
                labels = labels';
             end
             datadWithLabels = [labels data];
-            [dataProjected mappingLDA]= compute_mapping(datadWithLabels,'LDA', dimensions);
+            [dataProjected, mappingLDA]= compute_mapping(datadWithLabels,'LDA', dimensions);
             meanProjection = mappingLDA.mean;
             vectorsProjection = mappingLDA.M;
         case 'kernelPCAgaussian'
-            [dataProjected mappingKernelPCA]= compute_mapping(data,'KernelPCA', dimensions, 'gauss');
-%             mapping.X = X;
-%             mapping.V = V;
-%             mapping.invsqrtL = invsqrtL;
-%             mapping.kernel = kernel;
-%             mapping.param1 = param1;
-%             mapping.param2 = param2;
+            [dataProjected, mappingKernelPCA]= compute_mapping(data,'KernelPCA', dimensions, 'gauss');
+            meanProjection = [];
+            vectorsProjection = mappingKernelPCA.X';
         case 'kernelPCApolynomial'
-            [dataProjected mappingKernelPCA]= compute_mapping(data,'KernelPCA', dimensions, 'poly');
+            [dataProjected, mappingKernelPCA]= compute_mapping(data,'KernelPCA', dimensions, 'poly');
+            meanProjection = [];
+            vectorsProjection = mappingKernelPCA.X';
     end
 
 end
