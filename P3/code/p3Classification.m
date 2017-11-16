@@ -33,4 +33,8 @@ indexesCrossVal = crossvalind('Kfold',size(imagesData,1),K);
 %[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'example','none')
 %[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','none')
 %[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','PCA')
-[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','LDA')
+%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','LDA')
+%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','kernelPCAgaussian')
+[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','kernelPCApolynomial')
+
+%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'Mahalanobis','minPCA')

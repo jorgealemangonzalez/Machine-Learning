@@ -32,12 +32,27 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
             case 'PCA'
                 [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'PCA', 530, labelsTrain);
                 testSamples = testSamples * vectorsProjection;
+            case 'minPCA'
+                %In classify the number of samples of EACH GROUP must be
+                %greater than the number of variables
+                elements = zeros(7,1);
+                for i = 1:size(labelsUsed(:))
+                    elements(i) = sum(labelsTrain(:) == labelsUsed(i));
+                end
+                minElements = min(elements) - 1;
+                
+                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'PCA', minElements, labelsTrain);
+                testSamples = testSamples * vectorsProjection;
             case 'LDA'
                 [dataProjected, meanProjection, vectorsProjectionPCA] = reduceDimensionality( trainSamples, 'PCA', 520, labelsTrain);
                 [trainSamples, meanProjection, vectorsProjectionLDA] = reduceDimensionality( dataProjected, 'LDA', 6, labelsTrain);
                 testSamples = testSamples * vectorsProjectionPCA * vectorsProjectionLDA;
-            case 'kernelPCA'    
-                %CODE HERE
+            case 'kernelPCAgaussian'
+                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'kernelPCAgaussian', 530, labelsTrain);
+                testSamples = testSamples * vectorsProjection;
+            case 'kernelPCApolynomial'
+                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'kernelPCApolynomial', 530, labelsTrain);
+                testSamples = testSamples * vectorsProjection;
 		%Check de compute_mapping function.
 
         end
@@ -49,7 +64,9 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
                 % SAMPLE OF MATLAB's implementation of several classifiers
                 knn = fitcknn(trainSamples, labelsTrain);
                 estimatedLabels=knn.predict(testSamples);
-                
+               
+            case 'Mahalanobis'
+                estimatedLabels = classify(testSamples, trainSamples, labelsTrain, 'mahalanobis');
                 
             case 'SVM'
                 % TODO:
@@ -75,10 +92,8 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
                     estimatedLabels(j) = labelsUsed(k);
                 end
                 
-                
-            case 'Mahalanobis'
-
-            case 'kernelSVM'     
+            case 'kernelSVMgaussian'
+            case 'kernelSVMpolynomial'
 
         end
 
