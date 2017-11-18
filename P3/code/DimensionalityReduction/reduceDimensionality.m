@@ -14,14 +14,6 @@ function [ dataProjected, meanProjection, vectorsProjection ] = reduceDimensiona
             [dataProjected, mappingLDA]= compute_mapping(datadWithLabels,'LDA', dimensions);
             meanProjection = mappingLDA.mean;
             vectorsProjection = mappingLDA.M;
-        case 'kernelPCAgaussian'
-            [dataProjected, mappingKernelPCA]= compute_mapping(data,'KernelPCA', dimensions, 'gauss');
-            meanProjection = [];
-            vectorsProjection = mappingKernelPCA.X';
-        case 'kernelPCApolynomial'
-            [dataProjected, mappingKernelPCA]= compute_mapping(data,'KernelPCA', dimensions, 'poly');
-            meanProjection = [];
-            vectorsProjection = mappingKernelPCA.X';
     end
 
 end

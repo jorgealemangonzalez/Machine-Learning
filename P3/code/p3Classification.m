@@ -18,7 +18,7 @@ addpath(genpath('.'));
 emotionsUsed = [0 1 3 4 5 6 7];  
 
 %%%%%%%%%%%%%%%% EXTRACT DATA %%%%%%%%%%%%
-[imagesData shapeData labels stringLabels] = extractData('../CKDB', emotionsUsed);
+[imagesData, shapeData, labels, stringLabels] = extractData('../DB/CKDB', emotionsUsed);
 
 %%%%%%%%%%%%%%%% EXTRACT FEATURES %%%%%%%%%%%%
 grayscaleFeatures = extractFeaturesFromData(imagesData,'grayscale');
@@ -30,20 +30,27 @@ indexesCrossVal = crossvalind('Kfold',size(imagesData,1),K);
 
 
 %%%%%%%  EXAMPLE OF CLASSIFYING THE EXPRESSION USING TEMPLATE  MATCHING %%%%
-%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'example','none')
-%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','none')
-[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','PCA')
-%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','LDA')
-%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','kernelPCAgaussian')
-%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','kernelPCApolynomial')
- 
-% [CONF1 ACC1] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','none')
-% [CONF2 ACC2] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','PCA')
-% [CONF3 ACC3] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','LDA')
 
-%[CONF1 ACC1] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','none')
-%[CONF2 ACC2] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','PCA')
-%[CONF3 ACC3] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','LDA')
+% NO raw dada
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'Mahalanobis','PCA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'Mahalanobis','LDA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'Mahalanobis','PCAgaussianKernel')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'Mahalanobis','PCApolynomialKernel')
+% 
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','none')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','PCA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','LDA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','PCAgaussianKernel')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVM','PCApolynomialKernel')
 
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','none')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','PCA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','LDA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','PCAgaussianKernel')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMpolynomialKernel','PCApolynomialKernel')
 
-%[CONF ACC] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'Mahalanobis','minPCA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','none')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','PCA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','LDA')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','PCAgaussianKernel')
+% [conf, acc] = applyMethods(grayscaleFeatures, labels, emotionsUsed, indexesCrossVal, 'SVMgaussian','PCApolynomialKernel')

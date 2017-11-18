@@ -1,4 +1,4 @@
-function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, indexesCrossVal, classificationMethod,dimensionalityReductionMethod)
+function [ accuracy, confusionMatrix ] = applyMethods(data, labels, labelsUsed, indexesCrossVal, classificationMethod,dimensionalityReductionMethod)
     
     % ApplyMethods
     
@@ -30,29 +30,20 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
 
         switch dimensionalityReductionMethod
             case 'PCA'
-                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'PCA', 530, labelsTrain);
-                testSamples = testSamples * vectorsProjection;
-            case 'minPCA'
-                %In classify the number of samples of EACH GROUP must be
-                %greater than the number of variables
-                elements = zeros(7,1);
-                for i = 1:size(labelsUsed(:))
-                    elements(i) = sum(labelsTrain(:) == labelsUsed(i));
-                end
-                minElements = min(elements) - 1;
-                
-                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'PCA', minElements, labelsTrain);
+                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'PCA', 15, labelsTrain);
                 testSamples = testSamples * vectorsProjection;
             case 'LDA'
                 [dataProjected, meanProjection, vectorsProjectionPCA] = reduceDimensionality( trainSamples, 'PCA', 520, labelsTrain);
                 [trainSamples, meanProjection, vectorsProjectionLDA] = reduceDimensionality( dataProjected, 'LDA', 6, labelsTrain);
                 testSamples = testSamples * vectorsProjectionPCA * vectorsProjectionLDA;
-            case 'kernelPCAgaussian'
-                [trainSamples, meanProjection, vectorsProjection] = reduceDimensionality( trainSamples, 'kernelPCAgaussian', 530, labelsTrain);
-                testSamples = testSamples * vectorsProjection;
-            case 'kernelPCApolynomial'
-                [trainSamples, ~, vectorsProjection] = reduceDimensionality( trainSamples, 'kernelPCApolynomial', 530, labelsTrain);
-                testSamples = testSamples * vectorsProjection;
+            case 'PCAgaussianKernel'
+                [trainSamples, mappingKernelPCA]= compute_mapping(trainSamples,'KernelPCA', 10, 'gauss');
+                testSamples = testSamples * mappingKernelPCA.X' * mappingKernelPCA.V * mappingKernelPCA.invsqrtL;
+                
+            case 'PCApolynomialKernel'
+                [trainSamples, mappingKernelPCA]= compute_mapping(trainSamples,'KernelPCA', 10, 'poly');
+                testSamples = testSamples * mappingKernelPCA.X' * mappingKernelPCA.V * mappingKernelPCA.invsqrtL;
+                
 		%Check de compute_mapping function.
 
         end
@@ -66,6 +57,7 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
             case 'Mahalanobis'
                 estimatedLabels = classify(testSamples, trainSamples, labelsTrain, 'mahalanobis');
             case 'SVM'
+                % https://es.mathworks.com/help/stats/fitcsvm.html
                 % TODO:
                 % Train and classify with an implementation of SVM
                 % HINT: check Matlab's svmtrain / svmclassify
@@ -134,10 +126,6 @@ function [ accuracy confusionMatrix ] = applyMethods(data, labels, labelsUsed, i
                     end
                     estimatedLabels(j) = labelsUsed(k);
                 end
-                
-            case 'kernelSVMgaussian'
-            case 'kernelSVMpolynomial'
-
         end
 
         %Create confusion matrix evaluating the templates with the test data
