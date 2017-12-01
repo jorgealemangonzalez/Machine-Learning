@@ -1,4 +1,8 @@
 
+function part1_3
+
+rng('default');
+
 %% 1 Cargar imágenes
 
 close all;
@@ -13,44 +17,54 @@ addpath(genpath('.'));
 % 5:Happiness 
 % 6:Sadness 
 % 7:Surprise
-emotionsUsed = [0 1 3 4 5 6 7];
-[imagesData, shapeData, labels, stringLabels] = extractData('../DB/CKDB', emotionsUsed);
+
+%emotionsUsed = [0 1 3 4 5 6 7];
+
+rootFolder = '../DB/CKDB';
+categories = {'0','1','3','4','5','6','7'};
+imds = imageDatastore(fullfile(rootFolder, categories), 'LabelSource', 'foldernames');
+
+%% 1.2 Aislar el mismo numero de samples por label
+
+tbl = countEachLabel(imds);
+minSetCount = min(tbl{:,2});
+imds = splitEachLabel(imds, minSetCount, 'randomize');
 
 %% 2 Convertir imágenes a formato Alexnet
 
-% 636imgs x 128px x 128px => 227px x 227px x 3channel x 636imgs
-
-imagesData = cat(4,imagesData,imagesData,imagesData);
-imagesData = permute(imagesData, [2, 3, 4, 1]);
-imagesData = imresize(imagesData, [227,227]);
+imds.ReadFcn = @(filename)readAndPreprocessImage(filename);
+    function Iout = readAndPreprocessImage(filename)
+                
+        I = imread(filename);
+        
+        % Some images may be grayscale. Replicate the image 3 times to
+        % create an RGB image. 
+        if ismatrix(I)
+            I = cat(3,I,I,I);
+        end
+        
+        % Resize the image as required for the CNN. 
+        Iout = imresize(I, [227 227]);  
+    end
 
 %% 3 Crear división de train y test
 
-K = 3;
-indexes = crossvalind('Kfold',size(imagesData,4),K);
-
-trainSamples = imagesData(:,:,:,indexes~=1);
-trainLabels  = labels(indexes~=1);
-
-testSamples  = imagesData(:,:,:,indexes==1);
-testLabels   = labels(indexes==1);
+[trainSamples, testSamples] = splitEachLabel(imds, 0.3, 'randomize');
 
 %% 4 Aplicar CNN a las imagenes para obtener features
 
 % Load pre-trained AlexNet
-net = alexnet()
+net = alexnet();
 featureLayer = 'fc7';
 
 % features = activations(net,X,layer,Name,Value)
-% If X is an array of images, then the first three dimensions correspond 
-% to height, width, and channels of an image (aka. 227x227x3xN), and the fourth dimension 
-% corresponds to the image number.
 
 trainFeatures = activations(net, trainSamples, featureLayer, ...
     'MiniBatchSize', 32, 'OutputAs', 'columns');
 
 %% 5 Entrenar SVM con trainFeatures
 
+trainLabels = trainSamples.Labels;
 classifier = fitcecoc(trainFeatures, trainLabels, ...
     'Learners', 'Linear', 'Coding', 'onevsall', 'ObservationsIn', 'columns');
 
@@ -63,7 +77,12 @@ testFeatures = activations(net, testSamples, featureLayer, 'MiniBatchSize',32);
 predictedLabels = predict(classifier, testFeatures);
 
 % Tabulate the results using a confusion matrix.
+testLabels = testSamples.Labels;
 confMat = confusionmat(testLabels, predictedLabels);
 
 % Convert confusion matrix into percentage form
 confMat = bsxfun(@rdivide,confMat,sum(confMat,2))
+
+% Compute accuracy
+accuracy = sum(diag(confMat)) / sum(confMat(:))
+end
