@@ -24,11 +24,14 @@ rootFolder = '../DB/CKDB';
 categories = {'0','1','3','4','5','6','7'};
 imds = imageDatastore(fullfile(rootFolder, categories), 'LabelSource', 'foldernames');
 
-%% 1.2 Aislar el mismo numero de samples por label
+% 1.2 Aislar el mismo numero de samples por label con Bagging
+% => Repetir imagenes hasta obtener 4 veces el mínimo
 
 tbl = countEachLabel(imds);
 minSetCount = min(tbl{:,2});
-imds = splitEachLabel(imds, minSetCount, 'randomize');
+imdsTemp = splitEachLabel(imds, minSetCount, 'randomize');
+imds.Files = [imdsTemp.Files; imdsTemp.Files; imdsTemp.Files; imdsTemp.Files];
+imds.Labels = [imdsTemp.Labels; imdsTemp.Labels; imdsTemp.Labels; imdsTemp.Labels];
 
 %% 2 Convertir imágenes a formato Alexnet
 
@@ -81,7 +84,7 @@ testLabels = testSamples.Labels;
 confMat = confusionmat(testLabels, predictedLabels);
 
 % Convert confusion matrix into percentage form
-confMat = bsxfun(@rdivide,confMat,sum(confMat,2))
+confMat = bsxfun(@rdivide,confMat,sum(confMat,2));
 
 % Compute accuracy
 accuracy = sum(diag(confMat)) / sum(confMat(:))
