@@ -20,6 +20,7 @@ addpath(genpath('.'));
 
 %emotionsUsed = [0 1 3 4 5 6 7];
 
+disp('(1/5) Obteniendo imágenes...');
 rootFolder = '../DB/CKDB';
 categories = {'0','1','3','4','5','6','7'};
 imds = imageDatastore(fullfile(rootFolder, categories), 'LabelSource', 'foldernames');
@@ -56,6 +57,7 @@ imds.ReadFcn = @(filename)readAndPreprocessImage(filename);
 
 %% 4 Aplicar CNN a las imagenes para obtener features
 
+disp('(2/5) Generando trainFeatures...');
 % Load pre-trained AlexNet
 net = alexnet();
 featureLayer = 'fc7';
@@ -67,15 +69,18 @@ trainFeatures = activations(net, trainSamples, featureLayer, ...
 
 %% 5 Entrenar SVM con trainFeatures
 
+disp('(3/5) Entrenando SVM...');
 trainLabels = trainSamples.Labels;
 classifier = fitcecoc(trainFeatures, trainLabels, ...
     'Learners', 'Linear', 'Coding', 'onevsall', 'ObservationsIn', 'columns');
 
 %% 6 Test SVM classifier
 
+disp('(4/5) Generando testFeatures..');
 % Extract test features using the CNN
 testFeatures = activations(net, testSamples, featureLayer, 'MiniBatchSize',32);
 
+disp('(5/5) Testeando SVM...');
 % Pass CNN image features to trained classifier
 predictedLabels = predict(classifier, testFeatures);
 
