@@ -3,18 +3,18 @@ function part2
 % https://es.mathworks.com/help/nnet/ref/activations.html
 
 %Network architecture : http://cs231n.stanford.edu/reports/2016/pdfs/005_Report.pdf
-dropout_probability = 0.5;
+dropout_probability = 0.50;
 layers = [
     imageInputLayer([48 48 1]);
-    convolution2dLayer([3 3],32);
+    convolution2dLayer([8 8],32, 'Stride',5);
     batchNormalizationLayer
     dropoutLayer(dropout_probability)
     reluLayer
-    convolution2dLayer([3 3],64);
-    maxPooling2dLayer(2)
-    reluLayer
+    %convolution2dLayer([3 3],64);
+    %maxPooling2dLayer(2)
+    %reluLayer
     
-    fullyConnectedLayer(512);
+    fullyConnectedLayer(64);
     reluLayer
     
     fullyConnectedLayer(7, 'Name', 'PredictedLabel'); % output layer
@@ -22,7 +22,7 @@ layers = [
     classificationLayer('Name', 'ClassifiedLabels')
 ];
 
-% DEEP NET BUT GRAT ACCURACY
+% DEEP NET BUT slow and ovefitting occur...
 % dropout_probability = 0.5;
 % layers = [imageInputLayer([48 48 1]);
 %           convolution2dLayer([3 3],64);         %FilterSize , NumFilters
@@ -59,7 +59,8 @@ layers = [
 %           softmaxLayer
 %           classificationLayer];
 
-options = trainingOptions('sgdm','ExecutionEnvironment','cpu');
+options = trainingOptions('sgdm','ExecutionEnvironment','cpu','MaxEpochs',64,...
+                        'Plots','training-progress','InitialLearnRate',0.01,'L2Regularization',0.12);
 rng('default')
 
 %% 1 Cargar imágenes
@@ -87,6 +88,9 @@ imds = imageDatastore(fullfile(rootFolder, categories), 'LabelSource', 'folderna
 
 tbl = countEachLabel(imds);
 minSetCount = min(tbl{:,2});
+% imdsTemp = splitEachLabel(imds, minSetCount, 'randomize');
+% imds.Files = [imdsTemp.Files; imdsTemp.Files; imdsTemp.Files; imdsTemp.Files];
+% imds.Labels = [imdsTemp.Labels; imdsTemp.Labels; imdsTemp.Labels; imdsTemp.Labels];
 imds = splitEachLabel(imds, minSetCount, 'randomize'); % Dejar 25 de cada
 %% 2 Convertir imágenes a formato Alexnet
 
@@ -105,8 +109,9 @@ imds.ReadFcn = @(filename)readAndPreprocessImage(filename);
 
 %% Train net
 
-% net = trainNetwork(trainSamples,layers,options);
-load net
+net = trainNetwork(trainSamples,layers,options);
+
+% load net
 save('net.mat','net');
 %predictedLabels = activations(net, testSamples, 'ClassifiedLabels', 'MinibatchSize', 30)
 predictedLabels = classify(net, testSamples);
