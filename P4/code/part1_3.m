@@ -25,14 +25,11 @@ rootFolder = '../DB/CKDB';
 categories = {'0','1','3','4','5','6','7'};
 imds = imageDatastore(fullfile(rootFolder, categories), 'LabelSource', 'foldernames');
 
-% 1.2 Aislar el mismo numero de samples por label con Bagging
-% => Repetir imagenes hasta obtener 4 veces el mínimo
+% 1.2 Aislar el mismo numero de samples por label
 
 tbl = countEachLabel(imds);
 minSetCount = min(tbl{:,2});
-imdsTemp = splitEachLabel(imds, minSetCount, 'randomize');
-imds.Files = [imdsTemp.Files; imdsTemp.Files; imdsTemp.Files; imdsTemp.Files];
-imds.Labels = [imdsTemp.Labels; imdsTemp.Labels; imdsTemp.Labels; imdsTemp.Labels];
+imds = splitEachLabel(imds, minSetCount, 'randomize');
 
 %% 2 Convertir imágenes a formato Alexnet
 
